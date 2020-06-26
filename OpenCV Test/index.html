@@ -1,19 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OpenCV.js</title>
+    <title>OpenCV</title>
     <link rel="stylesheet" type="text/css" href="./CSS/main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="./JavaScript/opencv.js" type="text/javascript"></script>
 </head>
-<body>
-    <!-- Our HTML will go here-->
-    <div class="modal"></div>
 
-    <video  id="videoInput" height="480" width="640"></video>
-    <canvas id="canvasFrame"></canvas>
-    <canvas id="canvasOutput"></canvas>
-    
-<script async src="./JavaScript/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
-<script src="./JavaScript/script.js"></script>
-</body>
+  <body>
+    <div>
+      <video id="videoInput"></video> 
+      <canvas id="canvasOutput"></canvas>
+    </div>
+
+    <script>
+    let video = document.getElementById("videoInput"); // video is the id of video tag
+    video.width = 640;
+    video.height = 480;
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+  .then(function(stream) {
+    video.srcObject = stream;
+    video.play();
+
+  let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+  let dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
+  let cap = new cv.VideoCapture(video);
+  const FPS = 30;
+  function processVideo() {
+      let begin = Date.now();
+      cap.read(src);
+      cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+      cv.imshow("canvasOutput", dst);
+      // schedule next one.
+      let delay = 1000/FPS - (Date.now() - begin);
+      setTimeout(processVideo, delay);
+}
+// schedule first one.
+setTimeout(processVideo, 0);
+  })
+  .catch(function(err) {
+    console.log("An error occurred! " + err);
+  });
+
+    </script>
+  </body>
 </html>

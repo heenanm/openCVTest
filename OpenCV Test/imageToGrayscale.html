@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenCV</title>
+    <link rel="stylesheet" type="text/css" href="./CSS/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="./JavaScript/opencv.js" type="text/javascript"></script>
+</head>
+<body>
+
+    <img id="inputImage">
+    <input type="file" id="fileInput">
+    <canvas id="output"></canvas>
+
+<script>
+    let imgInput = document.getElementById("inputImage");
+    let fileInput = document.getElementById("fileInput");
+
+    fileInput.addEventListener("change", (e) => {
+        imgInput.src = URL.createObjectURL(e.target.files[0])
+    },false);
+
+    imgInput.onload = function(){
+        let mat = cv.imread(imgInput);
+        cv.cvtColor(mat,mat,cv.COLOR_RGB2GRAY);
+        cv.imshow("output", mat);
+        mat.delete();
+    }
+</script>
+
+    <!-- Our HTML will go here-->
+    <div class="modal"></div>
+
+    <video  id="videoInput" height="480" width="640"></video>
+    <canvas id="canvasFrame"></canvas>
+    <canvas id="canvasOutput"></canvas>
+    
+
+
+</body>
+</html>
